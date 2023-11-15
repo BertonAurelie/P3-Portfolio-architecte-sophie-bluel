@@ -18,7 +18,7 @@ async function afficherGallery(pieces) {
         console.log(imageElement)
 
         const titleElement=document.createElement("figcaption");
-        titleElement.innerText = article.title ?? "pas de titre";
+        titleElement.innerText = article.title;
         console.log(titleElement)
 
         sectionGallery.appendChild(projetElement);

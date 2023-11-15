@@ -78,12 +78,63 @@ h1 > span {
 ;
 }
 
+#portfolio {
+	display: flex;
+	flex-direction: column;
+}
+.title-project {
+	width:100%;
+	display:flex;
+	flex-direction: row;
+	flex-wrap: nowrap;	
+	justify-content: center;
+	align-self: center;
+	align-items: center;
+}
+
 h2{
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 30px;
 	color: #1D6154
 }
+
+button {
+	border-style : none;
+	background-color:white ;
+	
+}
+
+.btn-gallery-filter {
+	display: flex;
+	width:55%;
+	flex-direction: row;
+	align-self: center;
+	justify-content: space-between;
+}
+
+.btn-gallery-filter button {
+	display: flex;
+	flex-direction: row;
+	gap:10px;
+	color: #1D6154;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	height:37px;
+	font-size: 16px;;
+	border-radius: 60px;
+	border:1px solid #1D6154;
+	font-weight: 700;
+	font-family: Syne;
+	padding: 0 15px;
+	margin-bottom:50px;
+	&&:hover {
+		background-color: #1D6154;
+		color:white;
+	}
+}
+
 nav ul {
 	display: flex;
 	align-items: center;
