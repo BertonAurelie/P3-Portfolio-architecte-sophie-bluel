@@ -9,7 +9,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
-	<script type="module" src="script.js" defer></script>
+	<script src="script.js" type="module" defer></script>
 	<script src="https://kit.fontawesome.com/ab674341b6.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -17,9 +17,9 @@
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
-			<li>projets</li>
+			<li><a href="index.html">projets</a></li>
 			<li>contact</li>
-			<li>login</li>
+			<li><a href="login.html">login</a></li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
@@ -40,10 +40,10 @@
 			<h2>Mes Projets <button> <i class="fa-regular fa-pen-to-square"></i>modifier</button></h2>
 		
 		<div class="btn-gallery-filter">
-			<button>Tous</button>
-			<button>Objets</button>
-			<button>Appartements</button>
-			<button>Hôtels & restaurants</button>
+			<button id="default">Tous</button>
+			<button id="objets">Objets</button>
+			<button id="Appartements">Appartements</button>
+			<button id="hotelsRestaurants">Hôtels & restaurants</button>
 		</div>
 		<div class="gallery">
 		</div>
