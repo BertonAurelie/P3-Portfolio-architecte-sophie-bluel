@@ -37,7 +37,20 @@
 		</article>
 	</section>
 	<section id="portfolio">
-			<h2>Mes Projets <button> <i class="fa-regular fa-pen-to-square"></i>modifier</button></h2>
+			<h2>Mes Projets <a href="#modal1" class="js-modal"> <i class="fa-regular fa-pen-to-square"></i>modifier</a></h2>
+
+		<aside id="modal1" class="modal" aria-hidden="true" role="dialog" aria-labelledby="title-modal" style="display: none;">
+			<div class="modal-wrapper js-modal-stop">
+				<button class="js-button-close-modal"><i class="fa-solid fa-xmark"></i></button>
+				<h3 class="title-modal">Galerie photo</h2>
+				<div class="gallery-modal"> 
+					<!-- <button id="img-icon"> <i class="fa-solid fa-trash-can"></i></button> -->
+				</div>
+				<div class="button-modal-border">
+					<button id="button-modal"> Ajouter une photo</button>
+				</div>
+			</div>
+		</aside>
 		
 		<div class="btn-gallery-filter">
 			<button id="default">Tous</button>
