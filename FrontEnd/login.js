@@ -27,8 +27,8 @@ formLogin.addEventListener("submit",async function(event) {
         });
         if (loginResponse.ok){
             const loginBody = await loginResponse.json();
-            const token = loginBody.token;
-
+            sessionStorage.setItem("token", loginBody.token);
+            
             document.location.href="index.html";
         }else {
             password.value = "";

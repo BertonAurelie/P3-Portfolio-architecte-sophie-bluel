@@ -1,6 +1,9 @@
 const tableaux = await fetch("http://localhost:5678/api/works");
 const pieces =  await tableaux.json();
 
+////////////////////////////////////////////////
+//           Afficher la galerie             // 
+//////////////////////////////////////////////
 async function afficherGallery(pieces) {
     
     for (let i = 0; i < pieces.length; i++ ) {
@@ -28,6 +31,10 @@ async function afficherGallery(pieces) {
 } 
  
 afficherGallery(pieces)
+
+////////////////////////////////////////////////
+//           Boutons pour filtrer            // 
+//////////////////////////////////////////////
 
 const boutonObjets = document.getElementById("objets");
 boutonObjets.addEventListener("click", function(){
@@ -70,6 +77,11 @@ boutonHotelsRestaurants.addEventListener("click", function(){
     afficherGallery(objetsFiltres)
 })
 
+
+////////////////////////////////////////////////
+//           Modale suppression              // 
+//////////////////////////////////////////////
+
 let modal= null;
 
 const openModal=function (e) {
@@ -78,12 +90,16 @@ const openModal=function (e) {
     target.style.display=null;
     target.removeAttribute("aria-hidden");
     target.setAttribute("aria-modal", "true");
+    showDeleteDiv();  
     modal = target;
     modal.addEventListener("click", closeModal);
-    modal.querySelector(".js-button-close-modal").addEventListener("click", closeModal);
-    modal.querySelector(".js-modal-stop").addEventListener("click", stopPropagation);
+    document.querySelectorAll(".js-button-close-modal").forEach(a => {
+        a.addEventListener("click", closeModal);
+    })
+    document.querySelectorAll(".js-modal-stop").forEach(a => {
+        a.addEventListener("click", stopPropagation);
+    })
 }
-
 
 const closeModal=function (e) {
     if( modal === null ) return;
@@ -92,8 +108,12 @@ const closeModal=function (e) {
     modal.setAttribute("aria-hidden", "true");
     modal.removeAttribute("aria-modal");
     modal.removeEventListener("click", closeModal)
-    modal.querySelector(".js-button-close-modal").removeEventListener("click", closeModal);
-    modal.querySelector(".js-modal-stop").removeEventListener("click", stopPropagation);
+    document.querySelectorAll(".js-button-close-modal").forEach(a => {
+        a.removeEventListener("click", closeModal);
+    })
+    document.querySelectorAll(".js-modal-stop").forEach(a => {
+        a.removeEventListener("click", stopPropagation);
+    })
     modal = null;
 }
 
@@ -105,14 +125,48 @@ document.querySelectorAll(".js-modal").forEach(a => {
     a.addEventListener("click", openModal);
 })
 
+function showDeleteDiv() {
+    const modalAdd = document.getElementById("add-div");
+    modalAdd.style.display="none";
+    const DeleteDiv = document.getElementById("delete-div");
+    DeleteDiv.style.display=null;
+    afficherGalleryModal(pieces);
+}
+
+
+function showAddDiv() {
+    const DeleteDiv = document.getElementById("delete-div");
+    DeleteDiv.style.display="none";
+    const modalAdd = document.getElementById("add-div");
+    modalAdd.style.display=null;
+}
+
+const addButton = document.querySelector(".button-to-modal-ajout")
+addButton.addEventListener("click", function() {
+    showAddDiv();
+})
+
+
+const previousToModalDelete = document.querySelector(".button-to-modal-delete");
+previousToModalDelete.addEventListener("click", function() {/* 
+    event.preventDefault();
+    event.stopPropagation(); */
+    showDeleteDiv();
+})
+
+///////////////////////////////////////////////////////////
+//      Afficher la galerie Modale + suppression        // 
+/////////////////////////////////////////////////////////
+
 async function afficherGalleryModal(pieces) {
-    
+    // Récupération de l'élément du DOM(div gallery) qui accueillera les tableaux
+    const sectionGallery = document.querySelector(".gallery-modal")
+
+    sectionGallery.innerText="";
+
     for (let i = 0; i < pieces.length; i++ ) {
         let article = pieces[i];
-
-        // Récupération de l'élément du DOM(div gallery) qui accueillera les tableaux
-        const sectionGallery = document.querySelector(".gallery-modal")
-        
+      
         // Création d’une balise dédiée à un projet
         const projetElement = document.createElement ("div")
         projetElement.className="projet"
@@ -130,12 +184,35 @@ async function afficherGalleryModal(pieces) {
         sectionGallery.appendChild(projetElement);
         projetElement.appendChild(imageElement);
         projetElement.appendChild(deleteElement);
+
+
+        deleteElement.addEventListener("click", async function(event){
+            event.preventDefault()
+            event.stopPropagation();
+            const deleteUrl = "http://localhost:5678/api/works/" + article.id
+            const token =  "Bearer " + sessionStorage.getItem("token");
+            const deleteResponse = await fetch(deleteUrl, {
+            method: "DELETE",
+            headers: { "accept": "*/*", "Authorization": token}
+            });
+
+            if (deleteResponse.ok){
+
+            }else {
+                alert("e-mail ou mot de passe incorrect")
+    
+            }
+            
+        })
         
     } 
 
 } 
- 
-afficherGalleryModal(pieces)
+
+
+////////////////////////////////////////////////
+//          Modale Ajout de projets          // 
+//////////////////////////////////////////////
 
 
 

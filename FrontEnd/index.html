@@ -18,7 +18,7 @@
 	<nav>
 		<ul>
 			<li><a href="index.html">projets</a></li>
-			<li>contact</li>
+			<li><a href="#contact">contact</a></li>
 			<li><a href="login.html">login</a></li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
@@ -37,20 +37,46 @@
 		</article>
 	</section>
 	<section id="portfolio">
-			<h2>Mes Projets <a href="#modal1" class="js-modal"> <i class="fa-regular fa-pen-to-square"></i>modifier</a></h2>
+			<h2>Mes Projets <a href="#modal1" class="js-modal" > <i class="fa-regular fa-pen-to-square" ></i>modifier </a></h2>
 
 		<aside id="modal1" class="modal" aria-hidden="true" role="dialog" aria-labelledby="title-modal" style="display: none;">
-			<div class="modal-wrapper js-modal-stop">
+			<div class="modal-wrapper js-modal-stop" id="delete-div" style="display: none">
 				<button class="js-button-close-modal"><i class="fa-solid fa-xmark"></i></button>
-				<h3 class="title-modal">Galerie photo</h2>
+				<h3 class="title-div-modal">Galerie photo</h3>
 				<div class="gallery-modal"> 
-					<!-- <button id="img-icon"> <i class="fa-solid fa-trash-can"></i></button> -->
 				</div>
 				<div class="button-modal-border">
-					<button id="button-modal"> Ajouter une photo</button>
+					<button class="button-to-modal-ajout" >Ajouter une photo</button>
 				</div>
 			</div>
-		</aside>
+
+			<div class="modal-wrapper js-modal-stop" id="add-div" style="display: none" >
+				<div class="button-close">
+					<button class="button-to-modal-delete"><i class="fa-solid fa-arrow-left"></i></button>
+					<button class="js-button-close-modal"><i class="fa-solid fa-xmark"></i></button>
+				</div>
+				<h3 class="title-div-modal">Ajout photo</h3>
+				<form class="form-add-project" action="#" method="post">
+					<div class="add-pictures">
+						<i class="fa-regular fa-image" id="fa-image"></i>
+						<button class ="button-add-picture"> + Ajouter photo</button>
+						<p>jpg, png : 4mo max</p>
+					</div>
+					<label for="title">Titre</label>
+					<input type="text" name="title" id="title">
+					<label for="category">Catégorie</label>
+					<select name="category" id="category">
+						<option value=""></option>
+						<option value="objets">objets</option>
+						<option value="Appartements">Appartements</option>
+						<option value="hotelsRestaurants">hotels & Restaurants</option>
+					</select>
+					<div class="button-modal-border2">
+						<button class ="modal2-ajout"> Valider</button>
+					</div>
+				</form>
+			</div>
+		</aside>		
 		
 		<div class="btn-gallery-filter">
 			<button id="default">Tous</button>
