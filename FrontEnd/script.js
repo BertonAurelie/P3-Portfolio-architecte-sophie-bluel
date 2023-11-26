@@ -1,16 +1,20 @@
-const tableaux = await fetch("http://localhost:5678/api/works");
-const pieces =  await tableaux.json();
+let tableaux = await fetch("http://localhost:5678/api/works");
+let pieces =  await tableaux.json();
 
 ////////////////////////////////////////////////
 //           Afficher la galerie             // 
 //////////////////////////////////////////////
+
 async function afficherGallery(pieces) {
-    
+
+    // Récupération de l'élément du DOM(div gallery) qui accueillera les tableaux
+    const sectionGallery2 = document.querySelector(".gallery")
+
+    sectionGallery2.innerText="";
+
     for (let i = 0; i < pieces.length; i++ ) {
         let article = pieces[i];
 
-        // Récupération de l'élément du DOM(div gallery) qui accueillera les tableaux
-        const sectionGallery = document.querySelector(".gallery")
         
         // Création d’une balise dédiée à un projet
         const projetElement = document.createElement ("projet")
@@ -23,7 +27,7 @@ async function afficherGallery(pieces) {
         const titleElement=document.createElement("figcaption");
         titleElement.innerText = article.title;
    
-        sectionGallery.appendChild(projetElement);
+        sectionGallery2.appendChild(projetElement);
         projetElement.appendChild(imageElement);
         projetElement.appendChild(titleElement);
     } 
@@ -101,7 +105,7 @@ const openModal=function (e) {
     })
 }
 
-const closeModal=function (e) {
+const closeModal=async function (e) {
     if( modal === null ) return;
     e.preventDefault();
     modal.style.display= "none";
@@ -110,11 +114,16 @@ const closeModal=function (e) {
     modal.removeEventListener("click", closeModal)
     document.querySelectorAll(".js-button-close-modal").forEach(a => {
         a.removeEventListener("click", closeModal);
+        document.querySelector(".form-add-project").reset()
     })
     document.querySelectorAll(".js-modal-stop").forEach(a => {
         a.removeEventListener("click", stopPropagation);
+        document.querySelector(".form-add-project").reset()
     })
     modal = null;
+    tableaux = await fetch("http://localhost:5678/api/works");
+    pieces =  await tableaux.json();
+    afficherGallery(pieces);
 }
 
 const stopPropagation = function (e) {
@@ -197,6 +206,10 @@ async function afficherGalleryModal(pieces) {
             });
 
             if (deleteResponse.ok){
+                tableaux = await fetch("http://localhost:5678/api/works");
+                pieces =  await tableaux.json();
+                afficherGalleryModal(pieces);
+                afficherGallery(pieces);
 
             }else {
                 alert("e-mail ou mot de passe incorrect")
@@ -214,5 +227,32 @@ async function afficherGalleryModal(pieces) {
 //          Modale Ajout de projets          // 
 //////////////////////////////////////////////
 
+//Récupérer des fichiers grâce à l'input caché 
+const fileButton = document.getElementById("fileButton");
+const fileInput = document.getElementById("fileInput");
 
+fileButton.addEventListener("click",(e) => {
+    if (fileInput) {
+        fileInput.click();
+    }
+  },
+  false,
+); 
 
+fileInput.addEventListener("change",function() {
+    let image = document.getElementById("fileInput").files[0];
+
+    let reader = new FileReader();
+    let imageDiv = document.createElement("img");
+
+    reader.onload = function(e) {
+        imageDiv.src = e.target.result;
+    }
+
+    const divAddPictures = document.querySelector(".add-pictures");
+    divAddPictures.innerHTML = "";
+
+    reader.readAsDataURL(image);
+    divAddPictures.appendChild(imageDiv);
+
+})
