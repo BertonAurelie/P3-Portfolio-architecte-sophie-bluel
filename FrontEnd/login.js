@@ -30,6 +30,7 @@ formLogin.addEventListener("submit",async function(event) {
             sessionStorage.setItem("token", loginBody.token);
             
             document.location.href="index.html";
+            
         }else {
             password.value = "";
             alert("e-mail ou mot de passe incorrect")
@@ -38,3 +39,9 @@ formLogin.addEventListener("submit",async function(event) {
     }
 
 })
+
+/* if (sessionStorage.getItem ("token")){
+    document.querySelector(".connexion").textContent= "logout";
+}  */
+
+

@@ -1,5 +1,18 @@
-let tableaux = await fetch("http://localhost:5678/api/works");
-let pieces =  await tableaux.json();
+let lastFilter = -1;
+
+
+async function afficherGalleryAJour(lastFilter) {
+    let tableaux = await fetch("http://localhost:5678/api/works");
+    let pieces =  await tableaux.json();
+
+    if (lastFilter !== -1){
+        pieces = pieces.filter(function(piece) {
+            return piece.categoryId == lastFilter;
+        })
+    }
+
+    afficherGallery(pieces)
+}
 
 ////////////////////////////////////////////////
 //           Afficher la galerie             // 
@@ -34,51 +47,57 @@ async function afficherGallery(pieces) {
 
 } 
  
-afficherGallery(pieces)
+afficherGalleryAJour(lastFilter);
 
 ////////////////////////////////////////////////
 //           Boutons pour filtrer            // 
 //////////////////////////////////////////////
+const boutonDefault = document.getElementById("default");
+boutonDefault.addEventListener("click", function(){
+    document.getElementById("default").className="button-focus";
+    document.getElementById("Appartements").className="button-unfocus";
+    document.getElementById("objets").className="button-unfocus";
+    document.getElementById("hotelsRestaurants").className="button-unfocus";
+    console.log("vous avez cliqué Default")
+    lastFilter = -1;
+
+    afficherGalleryAJour(lastFilter);
+})
 
 const boutonObjets = document.getElementById("objets");
 boutonObjets.addEventListener("click", function(){
+    document.getElementById("objets").className="button-focus";
+    document.getElementById("Appartements").className="button-unfocus";
+    document.getElementById("hotelsRestaurants").className="button-unfocus";
+    document.getElementById("default").className="button-unfocus";
     console.log("vous avez cliqué objets")
-    const objetsFiltres = pieces.filter(function(objetfiltre) {
-        return objetfiltre.categoryId == 1 ;
-    })
-    document.querySelector(".gallery").innerHTML = "";
-    afficherGallery(objetsFiltres)
+    lastFilter = 1;
+    afficherGalleryAJour(lastFilter);
 })
 
-const boutonDefault = document.getElementById("default");
-boutonDefault.addEventListener("click", function(){
-    console.log("vous avez cliqué Default")
-    const objetsFiltres = pieces.filter(function(objetfiltre) {
-        return objetfiltre ;
-    })
-    document.querySelector(".gallery").innerHTML = "";
-    afficherGallery(objetsFiltres)
-})
+
 
 const boutonAppartements = document.getElementById("Appartements");
 boutonAppartements.addEventListener("click", function(){
+    document.getElementById("Appartements").className="button-focus";
+    document.getElementById("hotelsRestaurants").className="button-unfocus";
+    document.getElementById("objets").className="button-unfocus";
+    document.getElementById("default").className="button-unfocus";
     console.log("vous avez cliqué Appartements")
-    const objetsFiltres = pieces.filter(function(objetfiltre) {
-        return objetfiltre.categoryId == 2 ;
-    })
-    document.querySelector(".gallery").innerHTML = "";
-    afficherGallery(objetsFiltres)
+    lastFilter = 2;
+    afficherGalleryAJour(lastFilter);
     
 })
 
 const boutonHotelsRestaurants = document.getElementById("hotelsRestaurants");
 boutonHotelsRestaurants.addEventListener("click", function(){
+    document.getElementById("hotelsRestaurants").className="button-focus";
+    document.getElementById("Appartements").className="button-unfocus";
+    document.getElementById("objets").className="button-unfocus";
+    document.getElementById("default").className="button-unfocus";
     console.log("vous avez cliqué hotelsRestaurants")
-    const objetsFiltres = pieces.filter(function(objetfiltre) {
-        return objetfiltre.categoryId == 3 ;
-    })
-    document.querySelector(".gallery").innerHTML = "";
-    afficherGallery(objetsFiltres)
+    lastFilter = 3;
+    afficherGalleryAJour(lastFilter);
 })
 
 
@@ -121,9 +140,7 @@ const closeModal=async function (e) {
         document.querySelector(".form-add-project").reset()
     })
     modal = null;
-    tableaux = await fetch("http://localhost:5678/api/works");
-    pieces =  await tableaux.json();
-    afficherGallery(pieces);
+    afficherGalleryAJour(lastFilter);
 }
 
 const stopPropagation = function (e) {
@@ -139,7 +156,7 @@ function showDeleteDiv() {
     modalAdd.style.display="none";
     const DeleteDiv = document.getElementById("delete-div");
     DeleteDiv.style.display=null;
-    afficherGalleryModal(pieces);
+    afficherGalleryModal();
 }
 
 
@@ -153,6 +170,7 @@ function showAddDiv() {
 const addButton = document.querySelector(".button-to-modal-ajout")
 addButton.addEventListener("click", function() {
     showAddDiv();
+    showCategoryElement()
 })
 
 
@@ -167,7 +185,10 @@ previousToModalDelete.addEventListener("click", function() {/*
 //      Afficher la galerie Modale + suppression        // 
 /////////////////////////////////////////////////////////
 
-async function afficherGalleryModal(pieces) {
+async function afficherGalleryModal() {
+    let tableaux = await fetch("http://localhost:5678/api/works");
+    let pieces =  await tableaux.json();
+
     // Récupération de l'élément du DOM(div gallery) qui accueillera les tableaux
     const sectionGallery = document.querySelector(".gallery-modal")
 
@@ -183,11 +204,11 @@ async function afficherGalleryModal(pieces) {
         // Création des balises qui composent le projet
         const imageElement=document.createElement("img");
         imageElement.src = article.imageUrl;
-        imageElement.id=article.id;//pour delete surement sur l'icone
+        imageElement.id=article.id;
 
         const deleteElement=document.createElement("button");
         deleteElement.innerHTML='<i class="fa-solid fa-trash-can"></i>';
-        deleteElement.className="button-icon-delete"
+        deleteElement.className="button-icon-delete";
         deleteElement.id="button-icon-delete-" + article.id;
    
         sectionGallery.appendChild(projetElement);
@@ -209,7 +230,7 @@ async function afficherGalleryModal(pieces) {
                 tableaux = await fetch("http://localhost:5678/api/works");
                 pieces =  await tableaux.json();
                 afficherGalleryModal(pieces);
-                afficherGallery(pieces);
+                afficherGalleryAJour(lastFilter);
 
             }else {
                 alert("e-mail ou mot de passe incorrect")
@@ -239,20 +260,102 @@ fileButton.addEventListener("click",(e) => {
   false,
 ); 
 
+
+//Afficher le projet sélectionné
 fileInput.addEventListener("change",function() {
     let image = document.getElementById("fileInput").files[0];
 
     let reader = new FileReader();
     let imageDiv = document.createElement("img");
+    imageDiv.className="add-img-element";
 
     reader.onload = function(e) {
         imageDiv.src = e.target.result;
     }
 
     const divAddPictures = document.querySelector(".add-pictures");
-    divAddPictures.innerHTML = "";
-
+    const divFileButton = document.querySelector(".input-add-picture");
+    
+    const divAddPreviousImage = document.createElement("div");
+    divFileButton.style.display="none";
     reader.readAsDataURL(image);
-    divAddPictures.appendChild(imageDiv);
+    divAddPictures.appendChild(divAddPreviousImage);
+    divAddPreviousImage.appendChild(imageDiv);
 
+
+})
+
+
+async function showCategoryElement() {
+    //récupérer les catégories du swagger
+    const optionResponse = await fetch ("http://localhost:5678/api/categories", {
+        method : "GET",
+        headers: {"accept" : "application/json" }
+    });
+
+    const optionBody = await optionResponse.json();
+
+    for (let i = 0; i < optionBody.length; i++ ) {
+        let add = optionBody[i];
+
+        //Afficher les catégories
+        const selectCategory = document.getElementById("category");
+
+        const selectOption = document.createElement("option");
+        selectOption.textContent = add.name;
+        selectOption.id = add.id;
+
+        selectCategory.appendChild(selectOption);
+
+    }
+}
+
+//Afficher le mode éditeur 
+if (sessionStorage.getItem ("token")){
+    document.querySelector(".connexion").textContent= "logout";
+    document.querySelector(".js-modal").style.display=null;
+    document.querySelector(".mode-editor").style.display=null;
+
+    document.querySelector(".connexion").addEventListener("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        document.location.href="index.html";
+        document.querySelector(".connexion").textContent= "login";
+        document.querySelector(".js-modal").style.display="none";
+        document.querySelector(".mode-editor").style.display="none";
+        sessionStorage.removeItem("token");
+    })
+
+};
+
+const addElementButton = document.querySelector(".form-add-project");
+addElementButton.addEventListener("submit", async function(event){
+    event.preventDefault;
+    event.stopPropagation;
+    let image= document.getElementById("fileInput").files[0];
+    let title= document.getElementById("title-input");
+    let category= document.getElementById('category');    
+    let valeurselectionnee = category.options[category.selectedIndex].id;
+
+    let formData = new FormData();
+    formData.append("image", image);
+    formData.append("title", title.value);
+    formData.append("category", valeurselectionnee);
+
+
+    const token =  "Bearer " + sessionStorage.getItem("token");
+    const addWorkResponse = await fetch("http://localhost:5678/api/works", {
+        method:"POST",
+        headers:{"Authorization": token},
+        body: formData
+    });
+
+    if (addWorkResponse.ok){
+        alert("le projet a bien été ajouté à la galerie")
+        document.location.href="index.html";
+    } else {
+        alert("merci de bien vouloir renseigner les champs")
+
+    }
+    
 })
