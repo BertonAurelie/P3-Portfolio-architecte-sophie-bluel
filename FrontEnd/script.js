@@ -261,7 +261,7 @@ fileButton.addEventListener("click",(e) => {
 ); 
 
 
-//Afficher le projet sélectionné
+//Afficher l'image projet sélectionné
 fileInput.addEventListener("change",function() {
     let image = document.getElementById("fileInput").files[0];
 
@@ -285,7 +285,7 @@ fileInput.addEventListener("change",function() {
 
 })
 
-
+//afficher les catégories grâce à l'API
 async function showCategoryElement() {
     //récupérer les catégories du swagger
     const optionResponse = await fetch ("http://localhost:5678/api/categories", {
@@ -310,6 +310,40 @@ async function showCategoryElement() {
     }
 }
 
+//ajouter un projet 
+const addElementButton = document.querySelector(".form-add-project");
+addElementButton.addEventListener("submit", async function(event){
+    let image= document.getElementById("fileInput").files[0];
+    let title= document.getElementById("title-input").value;
+    let category= document.getElementById('category');    
+    let valeurselectionnee = category.options[category.selectedIndex].id;
+
+    let formData = new FormData();
+    formData.append("image", image);
+    formData.append("title", title);
+    formData.append("category", valeurselectionnee);
+
+    event.preventDefault;
+    event.stopPropagation;
+
+    const token =  "Bearer " + sessionStorage.getItem("token");
+    const addWorkResponse = await fetch("http://localhost:5678/api/works", {
+        method:"POST",
+        headers:{"Authorization": token},
+        body: formData
+    }).catch(error => console.log(error));
+
+    if (addWorkResponse.ok){
+        alert("le projet a bien été ajouté à la galerie")
+        console.log("le projet a bien été ajouté à la galerie")
+        document.location.href="index.html";
+    } else {
+        alert("merci de bien vouloir renseigner les champs")
+    }
+    
+})
+
+
 //Afficher le mode éditeur 
 if (sessionStorage.getItem ("token")){
     document.querySelector(".connexion").textContent= "logout";
@@ -327,36 +361,3 @@ if (sessionStorage.getItem ("token")){
     })
 
 };
-
-const addElementButton = document.querySelector(".form-add-project");
-addElementButton.addEventListener("submit", async function(event){
-    let image= document.getElementById("fileInput").files[0];
-    let title= document.getElementById("title-input").value;
-    let category= document.getElementById('category');    
-    let valeurselectionnee = category.options[category.selectedIndex].id;
-
-    let formData = new FormData();
-    formData.append("image", image);
-    formData.append("title", title);
-    formData.append("category", valeurselectionnee);
-
-    event.preventDefault;
-    event.stopPropagation;
-
-     const token =  "Bearer " + sessionStorage.getItem("token");
-    const addWorkResponse = await fetch("http://localhost:5678/api/works", {
-        method:"POST",
-        headers:{"Authorization": token},
-        body: formData
-    }).catch(error => console.log(error));
-
-    if (addWorkResponse.ok){
-        alert("le projet a bien été ajouté à la galerie")
-        console.log("le projet a bien été ajouté à la galerie")
-        document.location.href="index.html";
-    } else {
-        alert("merci de bien vouloir renseigner les champs")
-
-    }
-    
-})
