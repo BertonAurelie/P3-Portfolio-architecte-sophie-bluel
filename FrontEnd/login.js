@@ -40,8 +40,5 @@ formLogin.addEventListener("submit",async function(event) {
 
 })
 
-/* if (sessionStorage.getItem ("token")){
-    document.querySelector(".connexion").textContent= "logout";
-}  */
 
 

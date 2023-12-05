@@ -51,9 +51,8 @@
 					<h3 class="title-div-modal">Galerie photo</h3>
 					<div class="gallery-modal"> 
 					</div>
-					<div class="button-modal-border">
+					<hr class="button-modal-border">
 						<button class="button-to-modal-ajout" >Ajouter une photo</button>
-					</div>
 				</div>
 
 				<div class="modal-wrapper js-modal-stop" id="add-div" style="display: none" >
@@ -66,7 +65,7 @@
 						<div class="add-pictures">
 							<div class="input-add-picture">
 								<i class="fa-regular fa-image" id="fa-image"></i>
-								<input type="file" id="fileInput" accept=".jpg, .png" style="display:none">
+								<input type="file" id="fileInput" accept=".jpg,.png" max-size="4000" style="display:none">
 								<button id="fileButton" type="button" class ="button-add-picture"> + Ajouter photo</button>
 								<p>jpg, png : 4mo max</p>
 							</div>
@@ -76,9 +75,8 @@
 						<label for="category">Catégorie</label>
 						<select name="category" id="category">
 						</select>
-						<div class="button-modal-border2">
+						<hr class="button-modal-border2">
 							<button class ="modal2-ajout" type="submit"> Valider</button>
-						</div>
 					</form>
 				</div>
 			</aside>		

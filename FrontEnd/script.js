@@ -102,7 +102,7 @@ boutonHotelsRestaurants.addEventListener("click", function(){
 
 
 ////////////////////////////////////////////////
-//           Modale suppression              // 
+//           open/close Modale               // 
 //////////////////////////////////////////////
 
 let modal= null;
@@ -133,11 +133,12 @@ const closeModal=async function (e) {
     modal.removeEventListener("click", closeModal)
     document.querySelectorAll(".js-button-close-modal").forEach(a => {
         a.removeEventListener("click", closeModal);
-        document.querySelector(".form-add-project").reset()
     })
     document.querySelectorAll(".js-modal-stop").forEach(a => {
         a.removeEventListener("click", stopPropagation);
-        document.querySelector(".form-add-project").reset()
+        document.querySelector(".form-add-project").reset();
+      
+        changeColorButtonAddProject();
     })
     modal = null;
     afficherGalleryAJour(lastFilter);
@@ -169,8 +170,15 @@ function showAddDiv() {
 
 const addButton = document.querySelector(".button-to-modal-ajout")
 addButton.addEventListener("click", function() {
+    document.querySelector(".form-add-project").reset();
+    if (document.querySelector(".add-img-element")){
+        document.querySelector(".add-img-element").remove();
+        document.querySelector(".input-add-picture").style.display = null;
+    }
+    document.getElementById("category").options.length=0;
+    document.querySelector(".modal2-ajout").style.backgroundColor = '#A7A7A7';
     showAddDiv();
-    showCategoryElement()
+    showCategoryElement();
 })
 
 
@@ -282,7 +290,6 @@ fileInput.addEventListener("change",function() {
     divAddPictures.appendChild(divAddPreviousImage);
     divAddPreviousImage.appendChild(imageDiv);
 
-
 })
 
 //afficher les catégories grâce à l'API
@@ -293,26 +300,53 @@ async function showCategoryElement() {
         headers: {"accept" : "application/json" }
     });
 
+    
     const optionBody = await optionResponse.json();
-
+    
     for (let i = 0; i < optionBody.length; i++ ) {
         let add = optionBody[i];
 
         //Afficher les catégories
         const selectCategory = document.getElementById("category");
-
         const selectOption = document.createElement("option");
         selectOption.textContent = add.name;
         selectOption.id = add.id;
+        selectOption.className = "option-category";
 
         selectCategory.appendChild(selectOption);
+    }   
+    
+}
 
+
+
+//changer la couleur du bouton valider un projet
+const selectFormToAddProject = document.querySelector(".form-add-project");
+selectFormToAddProject.addEventListener("change", function(event){
+    event.preventDefault;
+    event.stopPropagation;
+    changeColorButtonAddProject();
+})
+
+function changeColorButtonAddProject() {
+    const addElementButton = document.querySelector(".modal2-ajout");
+    let image= document.getElementById("fileInput").value;
+    let title= document.getElementById("title-input").value;
+    let category= document.getElementById('category');    
+    let valeurselectionnee = category.options[category.selectedIndex].id;
+
+    console.log(image);
+    console.log(title);
+    console.log(valeurselectionnee);
+    if (image !== "" && title !== "" && valeurselectionnee.value !== ""){
+        addElementButton.style.backgroundColor = '#1D6154';
+    }else {
+        addElementButton.style.backgroundColor = '#A7A7A7';
     }
 }
 
 //ajouter un projet 
-const addElementButton = document.querySelector(".form-add-project");
-addElementButton.addEventListener("submit", async function(event){
+selectFormToAddProject.addEventListener("submit", async function(event){
     let image= document.getElementById("fileInput").files[0];
     let title= document.getElementById("title-input").value;
     let category= document.getElementById('category');    
@@ -322,7 +356,7 @@ addElementButton.addEventListener("submit", async function(event){
     formData.append("image", image);
     formData.append("title", title);
     formData.append("category", valeurselectionnee);
-
+    
     event.preventDefault;
     event.stopPropagation;
 
@@ -336,10 +370,10 @@ addElementButton.addEventListener("submit", async function(event){
     if (addWorkResponse.ok){
         alert("le projet a bien été ajouté à la galerie")
         console.log("le projet a bien été ajouté à la galerie")
-        document.location.href="index.html";
     } else {
         alert("merci de bien vouloir renseigner les champs")
     }
+    document.location.href="index.html";
     
 })
 
