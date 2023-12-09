@@ -35,7 +35,7 @@ async function afficherGallery(pieces) {
         // Création des balises qui composent le projet
         const imageElement=document.createElement("img");
         imageElement.src = article.imageUrl;
-        imageElement.id=article.id;//pour delete surement sur l'icone
+        imageElement.crossOrigin="anonymous";
 
         const titleElement=document.createElement("figcaption");
         titleElement.innerText = article.title;
@@ -173,6 +173,7 @@ addButton.addEventListener("click", function() {
     document.querySelector(".form-add-project").reset();
     if (document.querySelector(".add-img-element")){
         document.querySelector(".add-img-element").remove();
+        document.getElementById("div-add-previous-image").remove();
         document.querySelector(".input-add-picture").style.display = null;
     }
     document.getElementById("category").options.length=0;
@@ -213,6 +214,7 @@ async function afficherGalleryModal() {
         const imageElement=document.createElement("img");
         imageElement.src = article.imageUrl;
         imageElement.id=article.id;
+        imageElement.crossOrigin="anonymous";
 
         const deleteElement=document.createElement("button");
         deleteElement.innerHTML='<i class="fa-solid fa-trash-can"></i>';
@@ -241,7 +243,7 @@ async function afficherGalleryModal() {
                 afficherGalleryAJour(lastFilter);
 
             }else {
-                alert("e-mail ou mot de passe incorrect")
+                alert("e-mail ou mot de passe incorrect.")
     
             }
             
@@ -285,6 +287,7 @@ fileInput.addEventListener("change",function() {
     const divFileButton = document.querySelector(".input-add-picture");
     
     const divAddPreviousImage = document.createElement("div");
+    divAddPreviousImage.id="div-add-previous-image";
     divFileButton.style.display="none";
     reader.readAsDataURL(image);
     divAddPictures.appendChild(divAddPreviousImage);
@@ -368,10 +371,10 @@ selectFormToAddProject.addEventListener("submit", async function(event){
     }).catch(error => console.log(error));
 
     if (addWorkResponse.ok){
-        alert("le projet a bien été ajouté à la galerie")
-        console.log("le projet a bien été ajouté à la galerie")
+        alert("le projet a bien été ajouté à la galerie.")
+        console.log("le projet a bien été ajouté à la galerie.")
     } else {
-        alert("merci de bien vouloir renseigner les champs")
+        alert("merci de bien vouloir renseigner les champs.")
     }
     document.location.href="index.html";
     
